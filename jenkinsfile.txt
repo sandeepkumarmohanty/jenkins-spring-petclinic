@@ -1,0 +1,49 @@
+pipeline{
+    agent any
+    stages {
+      stage('checkout') {
+        steps {
+          // One or more steps need to be included within the steps block.
+    	  //git branch: 'main', url: 'https://github.com/g0t4/course3-jenkins-gs-spring-petclinic'
+    	    git branch: 'main', url: 'https://github.com/sandeepkumarmohanty/jenkins-spring-petclinic.git'
+        }
+      }
+      stage('BuildApp') {
+        steps {
+          // One or more steps need to be included within the steps block.
+    	  bat "./mvnw.cmd package"
+        }
+      }
+      stage('Testing') {
+        parallel {
+            stage('unitTest')
+            {
+                steps {
+    			    junit '**\\target\\surefire-reports\\*.xml'
+                }
+    		}
+    		stage('codeCoverageJacoco')
+    		{
+    		    steps{
+    		        jacoco()
+    		    }
+    		
+    		}//, failFast: true //if one of the parallel stage failed then to abort other parallel phase executon	
+        }
+      }
+    
+      stage('uploadJAR') {
+        steps {
+          // One or more steps need to be included within the steps block.
+    	  archiveArtifacts artifacts: '**/target/*.jar'
+        }
+      }
+    }
+	//Post block is executed after all stage action is complete regardless the build fails or success
+	post {
+	    always{
+	        //Configure Email to sent
+	        echo 'Email Sent.......'
+	    }
+	}
+}
