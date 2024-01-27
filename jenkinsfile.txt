@@ -1,6 +1,8 @@
 pipeline{
     agent any
     stages {
+      /*
+      //This code is not required as jenkin is already connecting to git to fetch this jenkins script file 
       stage('checkout') {
         steps {
           // One or more steps need to be included within the steps block.
@@ -8,6 +10,7 @@ pipeline{
     	    git branch: 'main', url: 'https://github.com/sandeepkumarmohanty/jenkins-spring-petclinic.git'
         }
       }
+      */
       stage('BuildApp') {
         steps {
           // One or more steps need to be included within the steps block.
